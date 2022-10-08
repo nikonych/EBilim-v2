@@ -9,14 +9,7 @@ import data.config as config
 
 
 
-# Кнопки заявки вывода
-async def withdraw_admin_buttons(withdraw_info):
-    keyboard = InlineKeyboardMarkup()
-    keyboard.add(InlineKeyboardButton("✅ Выполнено", callback_data=f"adminwithdraw_accept:{withdraw_info[0]}:{withdraw_info[1]}"),
-                 InlineKeyboardButton("❌ Отклонить", callback_data=f"adminwithdraw_cancel:{withdraw_info[0]}:{withdraw_info[1]}"),
-                 InlineKeyboardButton("⚠ Неправильный ввод", callback_data=f"adminwithdraw_wrong:{withdraw_info[0]}:{withdraw_info[1]}")
-                 )
-    return keyboard
+
 
 
 async def accept_license(user_id):

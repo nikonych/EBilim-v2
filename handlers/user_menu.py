@@ -12,7 +12,7 @@ from aiogram.types import CallbackQuery, Message, ContentType
 
 from data import config
 # from tgbot.data.config import bot_description
-from keyboards.inline_user import profile_buttons, top_buttons, back_button_to_profile, choose_withdraw, withdraw_admin_buttons
+from keyboards.inline_user import *
 from .user import get_profile_text
 # from tgbot.keyboards.inline_z_page import *
 from keyboards.reply_z_all import menu_frep

@@ -158,21 +158,21 @@ async def user_profile(message: Message, state: FSMContext):
 
 
 # Информация
-@dp.message_handler(text="📕 Информация", state="*")
+@dp.message_handler(text="📕 Расписание", state="*")
 async def info_handler(message: Message, state: FSMContext):
-    await state.finish()
-    info_kb = await info_buttons(db.get_settings())
-    dict_logs = db.get_logs_cols_sum()
-    text = config.info_text.format(total_logs=dict_logs['SUM(alllogs)'],
-                                   total_colds=dict_logs['SUM(allcolds)'],
-                                   day_logs=dict_logs['SUM(daylogs)'],
-                                   day_colds=dict_logs['SUM(daycolds)'],
-                                   week_logs=dict_logs['SUM(weeklogs)'],
-                                   week_colds=dict_logs['SUM(weekcolds)'],
-                                   month_logs=dict_logs['SUM(monthlogs)'],
-                                   month_colds=dict_logs['SUM(monthcolds)'],
-                                   total_users=len(db.get_all_usersx()))
-    await message.answer(text,reply_markup=info_kb)
+    sch = get_shedule(message.from_user.id)
+    text = ""
+    for k, v in sch.items():
+        text += f"<b>{k}</b> :\n"
+        for i in v:
+            for j in i:
+                if j == i[0] or j == i[3]:
+                    text += f"<code>{j}</code> | "
+                else:
+                    text += f"{j} | "
+            text += "\n\n"
+        text += "\n\n"
+    await message.answer(text)
 
 
 

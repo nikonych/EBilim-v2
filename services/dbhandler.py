@@ -161,11 +161,12 @@ def create_dbx():
                 print("DB was not found(1) | Creating...")
 
             # Создание БД с хранением данных настроек
-        if len(con.execute("PRAGMA table_info(settings)").fetchall()) == 1:
+        if len(con.execute("PRAGMA table_info(settings)").fetchall()) == 2:
             print("DB was found(2)")
         else:
             con.execute("CREATE TABLE settings("
-                        "is_work boolean default true)")
+                        "is_work boolean default true,"
+                        "week_num int default 1)")
 
             con.execute("INSERT INTO settings("
                         "is_work) "
