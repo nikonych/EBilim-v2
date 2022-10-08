@@ -13,10 +13,9 @@ from data.config import get_admins
 
 def menu_frep(user_id):
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.row("👤 Профиль", "⚙ Получить билд")
-    keyboard.row("📥 Выгрузить логи", "🏆 Топ команды")
-    keyboard.row("📕 Информация", "💎 Доп. функции")
-    # keyboard.row("🎁 Реферальная система")
+    keyboard.row("👤 Профиль", "📥 Транскрипт")
+    keyboard.row("📁 Предметы", "📕 Расписание")
+    keyboard.row("😈 Нажми если лень")
 
     if user_id in get_admins():
         keyboard.row("⚙ Админ панель")

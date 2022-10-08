@@ -41,7 +41,7 @@ async def get_rand_mega_acc():
 def get_last_admins():
     with sqlite3.connect(DATABASE_PATH) as con:
         con.row_factory = lambda cursor, row: row[0]
-        sql = "SELECT user_id FROM users where user_role= 'Admin'"
+        sql = "SELECT user_id FROM users where status= 'Admin'"
         return con.execute(sql).fetchall()
 
 # Получение администраторов бота

@@ -47,13 +47,13 @@ def update_format_args(sql, parameters: dict):
 ####################################################################################################
 ########################################### ЗАПРОСЫ К БД ###########################################
 # Добавление пользователя
-def add_userx(user_id, user_login, user_name):
+def add_userx(user_id, user_login, user_name, inai_login, inai_password):
     with sqlite3.connect(DATABASE_PATH) as con:
         con.row_factory = dict_factory
         con.execute("INSERT INTO users "
-                    "(user_id, user_login, user_name, user_date) "
-                    "VALUES (?, ?, ?, ?)",
-                    [user_id, user_login, user_name, get_date()])
+                    "(user_id, user_login, user_name, inai_login, inai_password, status) "
+                    "VALUES (?, ?, ?, ?, ?, ?)",
+                    [user_id, user_login, user_name, inai_login, inai_password, 'Матрос'])
         con.commit()
 
 
@@ -147,44 +147,31 @@ def create_dbx():
         con.row_factory = dict_factory
 
         # Создание БД с хранением данных пользователей
-        if len(con.execute("PRAGMA table_info(users)").fetchall()) == 20:
+        if len(con.execute("PRAGMA table_info(users)").fetchall()) == 7:
             print("All db was found")
         else:
-            try:
-                con.execute("DROP TABLE users")
-            finally:
                 con.execute("CREATE TABLE users("
                             "user_id INTEGER PRIMARY KEY ,"
                             "user_login TEXT,"
                             "user_name Text,"
-                            ""
-                            "monthcolds INTEGER default 0,"
-                            "allcolds INTEGER default 0,"
-                            "lastbuild INTEGER default 0)")
+                            "inai_login text,"
+                            "inai_password text,"
+                            "status text,"
+                            "is_banned boolean default FALSE)")
                 print("DB was not found(1) | Creating...")
 
             # Создание БД с хранением данных настроек
-        if len(con.execute("PRAGMA table_info(settings)").fetchall()) == 7:
+        if len(con.execute("PRAGMA table_info(settings)").fetchall()) == 1:
             print("DB was found(2)")
         else:
-            # con.execute("DROP TABLE settings")
-            try:
-                con.execute("DROP TABLE users")
-            finally:
-                con.execute("CREATE TABLE settings("
-                            "botlogchat INTEGER default 0,"
-                            "logchat INTEGER default 0,"
-                            "adminchat INTEGER default 0,"
-                            "otrabchat INTEGER default 0,"
-                            "profitchat INTEGER default 0,"
-                            "workerchat INTEGER default 0,"
-                            "newschat INTEGER default 0)")
+            con.execute("CREATE TABLE settings("
+                        "is_work boolean default true)")
 
-                con.execute("INSERT INTO settings("
-                            "botlogchat) "
-                            "VALUES (?)",
-                            [0])
-                print("DB was not found(2) | Creating...")
+            con.execute("INSERT INTO settings("
+                        "is_work) "
+                        "VALUES (?)",
+                        [True])
+            print("DB was not found(2) | Creating...")
 
 
             #

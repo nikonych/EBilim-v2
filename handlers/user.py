@@ -4,18 +4,20 @@ import os
 import queue
 import zipfile
 from threading import Thread
+from typing import Union
 
 from aiogram.dispatcher import FSMContext
 from aiogram.types import Message
 
 from keyboards.inline_admin import accept_user_inl
 from keyboards.reply_z_all import menu_frep
-from keyboards.inline_user import profile_buttons, info_buttons, top_buttons
+from keyboards.inline_user import *
 from loader import dp, bot
 import services.dbhandler as db
-
+from services.parser import *
 import time
 import data.config as config
+
 from services.user_functions import get_profile_text
 from utils.misc.bot_filters import IsNoBan
 
@@ -24,62 +26,131 @@ from utils.misc.bot_filters import IsNoBan
 @dp.message_handler(IsNoBan() , text=['⬅ Главное меню', '/start'], state="*")
 async def main_start(message: Message, state: FSMContext):
     await state.finish()
-    # print(open('tgbot/data/resourses/photo/main.jpg', 'rb').name)
     get_user = db.get_userx(user_id=message.from_user.id)
     if get_user is not None:
-        await message.answer(f"<b>👋 Приветик {message.from_user.first_name}!</b>\n"
-                             f"❤️ Добро пожаловать в {config.TEAM_NAME}!\n",
+        await message.answer(f"Рад увидеть твою рожу снова!",
                              reply_markup=menu_frep(message.from_user.id))
     else:
-        get_user = db.get_req(user_id=message.from_user.id)
-        if get_user is None or get_user['status'] != 'Wait':
-            await state.set_state('insert_lolz')
-            await message.answer("Отправьте <b>ссылку на ваш профиль lolz.guru:</b>")
-        else:
-            await message.answer('⏳ Вы уже отправили заявку на рассмотрение, ожидайте')
+        await message.answer("Как юнга в первом плаванье, принимай соглашение!", reply_markup=await accept_license(message.from_user.id))
 
 
-@dp.message_handler(state='insert_lolz')
-async def balance_for_withdraw(message: Message, state: FSMContext):
-    if message.text.startswith("https://lolz.guru") or message.text.startswith("lolz.guru"):
-        await state.update_data(insert_lolz=message.text)
-        await state.set_state("insert_stazh")
-        await message.answer('Введите ваш <b>опыт работы:</b>')
-    else:
-        await message.answer("<b>Введите валидную ссылку</b>")
+@dp.callback_query_handler(text_startswith="add_user:", state="*")
+async def insert_login(message: Union['Message', 'CallbackQuery'], state: FSMContext):
+    await state.finish()
+    await message.message.answer("Якорь мне в бухту! Теперь введи логин от eBilim")
+    await state.set_state("insert_login")
 
 
-@dp.message_handler(state='insert_stazh')
-async def balance_for_withdraw(message: Message, state: FSMContext):
+@dp.message_handler(state='insert_login')
+async def gg(message: Message, state: FSMContext):
+    await state.update_data(insert_login=message.text)
+    await message.answer("Как искатель сокровищ, введи пароль:")
+    await state.set_state("insert_password")
+
+
+@dp.message_handler(state='insert_password')
+async def gg(message: Message, state: FSMContext):
     async with state.proxy() as data:
-        lolz = data['insert_lolz']
-    stazh = message.text
-    admin_chat = db.get_settings()['adminchat']
-    user_id = message.from_user.id
-    try:
-        await bot.send_message(admin_chat,
-                           f'🔰 Заявка на вступление:\n'
-                           f'   🧑‍🚀 Пользователь: <a href="tg://user?id={user_id}">{message.from_user.first_name}</a>\n'
-                           f'   💻 Форум: {lolz}\n'
-                           f'   ✍️ Сообщение: {stazh}'
-                           f'\n'
-                           f'📜 История:'
-                           , reply_markup=await accept_user_inl(user_id))
-        db.new_req(user_id=user_id, status='Wait', lolz=lolz, stazh=stazh)
+        login = data['insert_login']
+    password = message.text
+    if check_ebilim(login, password):
+        await message.answer("Полных парусов и сухого пороха!", reply_markup=menu_frep(message.from_user.id))
+        db.add_userx(message.from_user.id, message.from_user.username, message.from_user.full_name, login, password)
         await state.finish()
-        await message.answer("⏳ Заявка на рассмотрении, ожидайте")
-    except:
-        pass
-
+    else:
+        await message.answer("Проклятье медузы!!! Повторим снова")
+        await state.finish()
+        await state.set_state('insert_login')
 
 
 
 # Профиль
-@dp.message_handler(text="👤 Профиль", state="*")
+@dp.message_handler(text="📥 Транскрипт", state="*")
 async def user_profile(message: Message, state: FSMContext):
     await state.finish()
-    user_data = db.get_userx(user_id=message.from_user.id)
-    await message.answer(await get_profile_text(user_data), reply_markup=await profile_buttons(user_data))
+    info = get_transkript2(message.from_user.id)
+    # db.addTranskript(message.from_user.id, info)
+    print(info)
+    total = 0
+    count = 0
+    text = ''
+    # time.sleep(2)
+    for k, v in info.items():
+        v = v.split(',')
+        pos = k[1].split(" ")
+        pos[2] = str(100 - int(pos[2][:-1])) + "%"
+        if v[1] == "67":
+            if int(float('.'.join(v))) + 1 > 98:
+                mark = 5.0
+            elif int(float('.'.join(v))) + 1 > 95:
+                mark = 4.9
+            elif int(float('.'.join(v))) + 1 > 92:
+                mark = 4.8
+            elif int(float('.'.join(v))) + 1 > 89:
+                mark = 4.7
+            elif int(float('.'.join(v))) + 1 > 86:
+                mark = 4.6
+            elif int(float('.'.join(v))) + 1 > 84:
+                mark = 4.5
+            elif int(float('.'.join(v))) + 1 > 83:
+                mark = 4.4
+            elif int(float('.'.join(v))) + 1 > 82:
+                mark = 4.3
+            elif int(float('.'.join(v))) + 1 > 81:
+                mark = 4.2
+            elif int(float('.'.join(v))) + 1 > 80:
+                mark = 4.1
+            elif int(float('.'.join(v))) + 1 > 79:
+                mark = 4.0
+            elif int(float('.'.join(v))) + 1 > 78:
+                mark = 3.9
+            elif int(float('.'.join(v))) + 1 > 76:
+                mark = 3.8
+            elif int(float('.'.join(v))) + 1 > 74:
+                mark = 3.7
+            elif int(float('.'.join(v))) + 1 > 72:
+                mark = 3.6
+            else:
+                mark = 'press F'
+            text += '{0}\n {1}\n {2}   {3}\n\n'.format(k[0][:-7], " ".join(pos), int(float('.'.join(v))) + 1, mark)
+        else:
+            if int(float('.'.join(v))) > 98:
+                mark = 5.0
+            elif int(float('.'.join(v))) > 95:
+                mark = 4.9
+            elif int(float('.'.join(v))) > 92:
+                mark = 4.8
+            elif int(float('.'.join(v))) > 89:
+                mark = 4.7
+            elif int(float('.'.join(v))) > 86:
+                mark = 4.6
+            elif int(float('.'.join(v))) > 84:
+                mark = 4.5
+            elif int(float('.'.join(v))) > 83:
+                mark = 4.4
+            elif int(float('.'.join(v))) > 82:
+                mark = 4.3
+            elif int(float('.'.join(v))) > 81:
+                mark = 4.2
+            elif int(float('.'.join(v))) > 80:
+                mark = 4.1
+            elif int(float('.'.join(v))) > 79:
+                mark = 4.0
+            elif int(float('.'.join(v))) > 78:
+                mark = 3.9
+            elif int(float('.'.join(v))) > 76:
+                mark = 3.8
+            elif int(float('.'.join(v))) > 74:
+                mark = 3.7
+            elif int(float('.'.join(v))) > 72:
+                mark = 3.6
+            else:
+                mark = 'press F'
+            text += '{0}\n {1}\n {2}   {3}\n\n'.format(k[0][:-7], " ".join(pos), int(float('.'.join(v))), mark)
+        total += float('.'.join(v))
+        count += 1
+    await message.answer(text)
+    await message.answer("Средний балл за семестр: " + str(round(total / count, 2)))
 
 
 
