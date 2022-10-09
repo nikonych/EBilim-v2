@@ -3,6 +3,13 @@ import urllib
 import prettytable as pt
 import requests
 from bs4 import BeautifulSoup
+import re
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 
 from services.dbhandler import get_userx, get_settings
 
@@ -11,7 +18,7 @@ s_url = ('https://lms.inai.kg/')
 transkript2 = ('https://lms.inai.kg/studentjurnal/semester?idSem=3&idGroup=17')
 subjects = ('https://lms.inai.kg/studentjurnal/discipline')
 schedule = ('https://lms.inai.kg/Scheduleteacher/group')
-
+payment = ('https://lms.inai.kg/payment/addpayment')
 
 # with requests.session() as s:
 #     s.post(url, data=payload)
@@ -92,32 +99,45 @@ def get_subjects(id):
         info = {}
         for desc in soup.findAll('div', class_="product-desc"):
             name = desc.find('a', class_="product-name").text
-            print(name.strip())
             price = desc.find('span', class_="product-price").text
             div = desc.find('div', class_="m-t text-righ")
             link = div.find('a', href=True)['href']
             info[name.strip() + " " + price.strip()] = link
-
+        print(info)
         return info
 
 
 def get_subject(id, link):
-    log_pas = main.db.getLogPas(id)
+    user = get_userx(user_id=id)
+
     payload = {
-        'Login': log_pas[0],
-        'Password': log_pas[1],
+        'Login': user['inai_login'],
+        'Password': user['inai_password'],
         'LangID': '1049'
     }
     with requests.session() as s:
         s.post(url, data=payload)
         urlsub = ('https://lms.inai.kg' + link)
+        option = Options()
+        option.add_argument("--disable-infobars")
+        browser = webdriver.Chrome('data/chromedriver', chrome_options=option)
+        browser.get(url)
+        login = browser.find_element_by_id("Login").send_keys(user['inai_login'])
+        password = browser.find_element_by_id("Password").send_keys(user['inai_password'])
+        submit = browser.find_element_by_xpath("//button[@type='submit']").click()
+        r = browser.get(urlsub)
+        html = browser.page_source
+        # r = s.get(urlsub)
+        print(html)
+        soup = BeautifulSoup(html, 'html.parser')
+        td = soup.find_all('td')
+        info = [i.text for i in td]
+        print(info)
 
-        r = s.get(urlsub)
-        soup = BeautifulSoup(r.content, 'html.parser')
-        table = soup.find_all('table')
-        print(table)
+        browser.close()
 
-        return soup.find_all('table', class_='table table-bordered dataTable no-footer')
+
+        return info
 
 
 def get_shedule(id):
@@ -158,6 +178,28 @@ def get_shedule(id):
 
         return days
 
+def get_user_info(id):
+    user = get_userx(user_id=id)
+    week_num = get_settings()['week_num']
 
-
+    payload = {
+        'Login': user['inai_login'],
+        'Password': user['inai_password'],
+        'LangID': '1049'
+    }
+    with requests.session() as s:
+        info = []
+        s.post(url, data=payload)
+        r = s.get(payment)
+        soup = BeautifulSoup(r.content, 'html.parser')
+        table = soup.find("table", class_="table table-striped mb0 font13")
+        name = table.find('a', {"target": "_blank"}).text.replace(" ", "").replace("\r", "").replace("\n","")
+        full_name = re.findall('[А-Я][^А-Я]*', name)
+        info.append(full_name)
+        soup_money = BeautifulSoup(s.get(s_url).content, 'html.parser')
+        money = soup_money.find("h1", class_="no-margins").text
+        info.append(money)
+        more_info = table.find_all("td")
+        [info.append(i.text.replace("\r", "").replace("\n","").strip()) for i in more_info[1:]]
+    return info
 

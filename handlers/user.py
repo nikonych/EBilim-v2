@@ -163,6 +163,8 @@ async def info_handler(message: Message, state: FSMContext):
     sch = get_shedule(message.from_user.id)
     text = ""
     for k, v in sch.items():
+        if v == []:
+            continue
         text += f"<b>{k}</b> :\n"
         for i in v:
             for j in i:
@@ -176,11 +178,44 @@ async def info_handler(message: Message, state: FSMContext):
 
 
 
+@dp.message_handler(text="👤 Профиль", state="*")
+async def info_handler(message: Message, state: FSMContext):
+     await message.answer(await get_profile_text(message.from_user.id))
 
 
+@dp.callback_query_handler(text_startswith="return_subjects", state="*")
+@dp.message_handler(text="📁 Предметы", state="*")
+async def info_handler(message: Union['Message', 'CallbackQuery'], state: FSMContext):
+    try:
+        await message.answer("Предметы", reply_markup=await get_subjects_inl(message.from_user.id))
+    except:
+        await message.message.edit_text("Предметы", reply_markup=await get_subjects_inl(message.from_user.id))
+
+@dp.callback_query_handler(text_startswith="/StudentJurnal", state="*")
+async def insert_login(message: Union['Message', 'CallbackQuery'], state: FSMContext):
+    link = message.data
+    subject = get_subject(message.from_user.id, link)
+    text = f"Оценки по предмету: <code>{subject[14]}</code>\n" \
+           f"Преподаватель: <code>{subject[15]}</code>\n\n"
+    print(len(subject))
+    if len(subject) >= 17:
+        k = 1
+        text1 = ['Тест', 'Устно', 'Письменно', '', '', '', '', '', '', 'Итог коллок	', 'Допбалл', 'Сумма', 'Оценка']
+        for i in range(len(subject[:13])):
+            if i in [0, 3, 6]:
+                type = text1[0]
+            elif i in [1, 4, 7]:
+                type = text1[1]
+            elif i in [2, 5, 8]:
+                type = text1[2]
+            if i == 3 or i == 6 or i >= 9:
+                k += 1
+                text += '\n'
+            if i < 9:
+                text += f"{k} {type}: <code>{subject[i]}\n</code>"
+            else:
+                text += f"{text1[i]}: <code>{subject[i]}\n</code>"
+
+        await message.message.edit_text(text, reply_markup=await return_subjects_inl())
 
 
-# Доп функции
-@dp.message_handler(text="💎 Доп. функции", state="*")
-async def additional_functions_handler(message: Message, state: FSMContext):
-    await message.answer('⚙️В разработке')

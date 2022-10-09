@@ -1,0 +1,2 @@
+Auto configuration failed
+140707438761920:error:0E079065:configuration file routines:DEF_LOAD_BIO:missing equal sign:conf_def.c:362:line 8
