@@ -193,6 +193,7 @@ async def info_handler(message: Union['Message', 'CallbackQuery'], state: FSMCon
 
 @dp.callback_query_handler(text_startswith="/StudentJurnal", state="*")
 async def insert_login(message: Union['Message', 'CallbackQuery'], state: FSMContext):
+    await message.message.edit_text("Есть только один флаг и он такой же черный, как черно дно марианской впадины...\n<b>Жди матрос!</b>")
     link = message.data
     subject = get_subject(message.from_user.id, link)
     text = f"Оценки по предмету: <code>{subject[14]}</code>\n" \
@@ -212,7 +213,7 @@ async def insert_login(message: Union['Message', 'CallbackQuery'], state: FSMCon
                 k += 1
                 text += '\n'
             if i < 9:
-                text += f"{k} {type}: <code>{subject[i]}\n</code>"
+                text += f"{k}-{type}: <code>{subject[i]}\n</code>"
             else:
                 text += f"{text1[i]}: <code>{subject[i]}\n</code>"
 

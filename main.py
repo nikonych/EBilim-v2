@@ -14,6 +14,8 @@ from loader import scheduler
 from services.api_session import RequestsSession
 from middlewares import setup_middlewares
 from services.dbhandler import create_dbx
+from utils.misc.bot_commands import set_commands
+
 # from utils.misc_functions import update_logs_day, update_logs_week, update_logs_month
 
 colorama.init()
@@ -32,7 +34,7 @@ async def on_startup(dp: Dispatcher):
     dp.bot['rSession'] = RequestsSession()
 
     # await scheduler_start()
-
+    await set_commands(dp)
 
     bot_logger.exception("BOT WAS STARTED")
     print(Fore.LIGHTYELLOW_EX + "~~~~~ Bot was started ~~~~~")
