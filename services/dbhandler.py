@@ -115,11 +115,20 @@ def get_usersx(**kwargs):
         return con.execute(sql, parameters).fetchall()
 
 
+
 # Получение всех пользователей
 def get_all_usersx():
     with sqlite3.connect(DATABASE_PATH) as con:
         con.row_factory = dict_factory
         sql = "SELECT * FROM users"
+        return con.execute(sql).fetchall()
+
+
+
+def get_all_trans():
+    with sqlite3.connect(DATABASE_PATH) as con:
+        con.row_factory = dict_factory
+        sql = "SELECT * FROM trans"
         return con.execute(sql).fetchall()
 
 
@@ -136,6 +145,16 @@ def update_userx(user_id, **kwargs):
     with sqlite3.connect(DATABASE_PATH) as con:
         con.row_factory = dict_factory
         sql = f"UPDATE users SET"
+        sql, parameters = update_format(sql, kwargs)
+        parameters.append(user_id)
+        con.execute(sql + "WHERE user_id = ?", parameters)
+        con.commit()
+
+
+def update_transx(user_id, **kwargs):
+    with sqlite3.connect(DATABASE_PATH) as con:
+        con.row_factory = dict_factory
+        sql = f"UPDATE trans SET"
         sql, parameters = update_format(sql, kwargs)
         parameters.append(user_id)
         con.execute(sql + "WHERE user_id = ?", parameters)
@@ -175,6 +194,20 @@ def create_dbx():
                         "VALUES (?)",
                         [True])
             print("DB was not found(2) | Creating...")
+
+        if len(con.execute("PRAGMA table_info(trans)").fetchall()) == 8:
+            print("DB was found(3)")
+        else:
+            con.execute("CREATE TABLE trans("
+                        "user_id INTEGER PRIMARY KEY,"
+                        "`f1` real, "
+                        "`f2` real, "
+                        "`f3` real, "
+                        "`f4` real, "
+                        "`f5` real, "
+                        "`f6` real, "
+                        "`f7` real)")
+            print("DB was not found(3) | Creating...")
 
 
             #

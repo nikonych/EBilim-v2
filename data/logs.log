@@ -1,3 +1,93 @@
-ERROR | 2022-12-25 21:42:54,522 | main.py:39 | BOT WAS STARTED
+ERROR | 2022-12-26 00:19:05,070 | main.py:41 | BOT WAS STARTED
 NoneType: None
-WARNING | 2022-12-25 21:44:51,090 | executor.py:329 | Goodbye!
+ERROR | 2022-12-26 00:19:15,315 | z_all_errors.py:21 | Exception: list index out of range
+Update: {"update_id": 46689762, "message": {"message_id": 3296, "from": {"id": 962664705, "is_bot": false, "first_name": "Heisenbergᅠࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣧࣧࣧࣧࣧࣧࣧࣧࣧࣧࣧᅠᅠࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣧࣧࣧࣧࣧࣧࣧࣧࣧࣧࣧ", "username": "nikonych", "language_code": "ru", "is_premium": true}, "chat": {"id": 962664705, "first_name": "Heisenbergᅠࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣧࣧࣧࣧࣧࣧࣧࣧࣧࣧࣧᅠᅠࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣩࣧࣧࣧࣧࣧࣧࣧࣧࣧࣧࣧ", "username": "nikonych", "type": "private"}, "date": 1671992348, "text": "📥 Транскрипт"}}
+Traceback (most recent call last):
+  File "/home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 256, in process_update
+    return await self.message_handlers.notify(update.message)
+  File "/home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "/home/niko/Documents/python/EBilim-v2/handlers/user.py", line 74, in user_profile
+    await check_trans()
+  File "/home/niko/Documents/python/EBilim-v2/utils/misc_functions.py", line 56, in check_trans
+    f"{sub_names[c]} - {info[c]}")
+IndexError: list index out of range
+ERROR | 2022-12-26 00:19:15,316 | base_events.py:1744 | Task exception was never retrieved
+future: <Task finished name='Task-9' coro=<Dispatcher._process_polling_updates() done, defined at /home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py:407> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "/home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 415, in _process_polling_updates
+    for responses in itertools.chain.from_iterable(await self.process_updates(updates, fast)):
+  File "/home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 235, in process_updates
+    return await asyncio.gather(*tasks)
+  File "/home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "/home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 256, in process_update
+    return await self.message_handlers.notify(update.message)
+  File "/home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "/home/niko/Documents/python/EBilim-v2/handlers/user.py", line 74, in user_profile
+    await check_trans()
+  File "/home/niko/Documents/python/EBilim-v2/utils/misc_functions.py", line 56, in check_trans
+    f"{sub_names[c]} - {info[c]}")
+IndexError: list index out of range
+ERROR | 2022-12-26 00:21:08,251 | z_all_errors.py:21 | Exception: list index out of range
+Update: {"update_id": 46689766, "message": {"message_id": 3306, "from": {"id": 1144427229, "is_bot": false, "first_name": "dastan", "username": "dast4nkg", "language_code": "ru"}, "chat": {"id": 1144427229, "first_name": "dastan", "username": "dast4nkg", "type": "private"}, "date": 1671992461, "text": "📥 Транскрипт"}}
+Traceback (most recent call last):
+  File "/home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 256, in process_update
+    return await self.message_handlers.notify(update.message)
+  File "/home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "/home/niko/Documents/python/EBilim-v2/handlers/user.py", line 74, in user_profile
+    await check_trans()
+  File "/home/niko/Documents/python/EBilim-v2/utils/misc_functions.py", line 56, in check_trans
+    # await bot.send_message(user['user_id'], f"Поставили оценку!\n"
+IndexError: list index out of range
+ERROR | 2022-12-26 00:21:08,251 | base_events.py:1744 | Task exception was never retrieved
+future: <Task finished name='Task-34' coro=<Dispatcher._process_polling_updates() done, defined at /home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py:407> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "/home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 415, in _process_polling_updates
+    for responses in itertools.chain.from_iterable(await self.process_updates(updates, fast)):
+  File "/home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 235, in process_updates
+    return await asyncio.gather(*tasks)
+  File "/home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "/home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 256, in process_update
+    return await self.message_handlers.notify(update.message)
+  File "/home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "/home/niko/Documents/python/EBilim-v2/handlers/user.py", line 74, in user_profile
+    await check_trans()
+  File "/home/niko/Documents/python/EBilim-v2/utils/misc_functions.py", line 56, in check_trans
+    # await bot.send_message(user['user_id'], f"Поставили оценку!\n"
+IndexError: list index out of range
+ERROR | 2022-12-26 00:25:21,736 | z_all_errors.py:21 | Exception: list index out of range
+Update: {"update_id": 46689772, "message": {"message_id": 3322, "from": {"id": 1311368639, "is_bot": false, "first_name": "᠌᠌ ᠌ ᠌ ᠌ ᠌ ᠌", "username": "Awesth912", "language_code": "ru"}, "chat": {"id": 1311368639, "first_name": "᠌᠌ ᠌ ᠌ ᠌ ᠌ ᠌", "username": "Awesth912", "type": "private"}, "date": 1671992714, "text": "📥 Транскрипт"}}
+Traceback (most recent call last):
+  File "/home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 256, in process_update
+    return await self.message_handlers.notify(update.message)
+  File "/home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "/home/niko/Documents/python/EBilim-v2/handlers/user.py", line 74, in user_profile
+    await check_trans()
+  File "/home/niko/Documents/python/EBilim-v2/utils/misc_functions.py", line 56, in check_trans
+    # await bot.send_message(user['user_id'], f"Поставили оценку!\n"
+IndexError: list index out of range
+ERROR | 2022-12-26 00:25:21,737 | base_events.py:1744 | Task exception was never retrieved
+future: <Task finished name='Task-77' coro=<Dispatcher._process_polling_updates() done, defined at /home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py:407> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "/home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 415, in _process_polling_updates
+    for responses in itertools.chain.from_iterable(await self.process_updates(updates, fast)):
+  File "/home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 235, in process_updates
+    return await asyncio.gather(*tasks)
+  File "/home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "/home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/dispatcher.py", line 256, in process_update
+    return await self.message_handlers.notify(update.message)
+  File "/home/niko/Documents/python/EBilim-v2/venv/lib/python3.10/site-packages/aiogram/dispatcher/handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "/home/niko/Documents/python/EBilim-v2/handlers/user.py", line 74, in user_profile
+    await check_trans()
+  File "/home/niko/Documents/python/EBilim-v2/utils/misc_functions.py", line 56, in check_trans
+    # await bot.send_message(user['user_id'], f"Поставили оценку!\n"
+IndexError: list index out of range
+WARNING | 2022-12-26 00:25:21,831 | executor.py:329 | Goodbye!

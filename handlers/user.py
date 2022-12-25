@@ -18,8 +18,9 @@ from services.parser import *
 import time
 import data.config as config
 
-from services.user_functions import get_profile_text
+from services.user_functions import get_profile_text, get_trans_text
 from utils.misc.bot_filters import IsNoBan
+from utils.misc_functions import check_trans
 
 
 # Открытие главного меню
@@ -68,88 +69,10 @@ async def gg(message: Message, state: FSMContext):
 @dp.message_handler(text="📥 Транскрипт", state="*")
 async def user_profile(message: Message, state: FSMContext):
     await state.finish()
-    info = get_transkript2(message.from_user.id)
-    # db.addTranskript(message.from_user.id, info)
-    total = 0
-    count = 0
-    text = ''
-    # time.sleep(2)
-    for k, v in info.items():
-        v = v.split(',')
-        pos = k[1].split(" ")
-        pos[2] = str(100 - int(pos[2][:-1])) + "%"
-        if v[1] == "67":
-            if int(float('.'.join(v))) + 1 > 98:
-                mark = 5.0
-            elif int(float('.'.join(v))) + 1 > 95:
-                mark = 4.9
-            elif int(float('.'.join(v))) + 1 > 92:
-                mark = 4.8
-            elif int(float('.'.join(v))) + 1 > 89:
-                mark = 4.7
-            elif int(float('.'.join(v))) + 1 > 86:
-                mark = 4.6
-            elif int(float('.'.join(v))) + 1 > 84:
-                mark = 4.5
-            elif int(float('.'.join(v))) + 1 > 83:
-                mark = 4.4
-            elif int(float('.'.join(v))) + 1 > 82:
-                mark = 4.3
-            elif int(float('.'.join(v))) + 1 > 81:
-                mark = 4.2
-            elif int(float('.'.join(v))) + 1 > 80:
-                mark = 4.1
-            elif int(float('.'.join(v))) + 1 > 79:
-                mark = 4.0
-            elif int(float('.'.join(v))) + 1 > 78:
-                mark = 3.9
-            elif int(float('.'.join(v))) + 1 > 76:
-                mark = 3.8
-            elif int(float('.'.join(v))) + 1 > 74:
-                mark = 3.7
-            elif int(float('.'.join(v))) + 1 > 72:
-                mark = 3.6
-            else:
-                mark = 'press F'
-            text += '{0}\n {1}\n {2}   {3}\n\n'.format(k[0][:-7], " ".join(pos), int(float('.'.join(v))) + 1, mark)
-        else:
-            if int(float('.'.join(v))) > 98:
-                mark = 5.0
-            elif int(float('.'.join(v))) > 95:
-                mark = 4.9
-            elif int(float('.'.join(v))) > 92:
-                mark = 4.8
-            elif int(float('.'.join(v))) > 89:
-                mark = 4.7
-            elif int(float('.'.join(v))) > 86:
-                mark = 4.6
-            elif int(float('.'.join(v))) > 84:
-                mark = 4.5
-            elif int(float('.'.join(v))) > 83:
-                mark = 4.4
-            elif int(float('.'.join(v))) > 82:
-                mark = 4.3
-            elif int(float('.'.join(v))) > 81:
-                mark = 4.2
-            elif int(float('.'.join(v))) > 80:
-                mark = 4.1
-            elif int(float('.'.join(v))) > 79:
-                mark = 4.0
-            elif int(float('.'.join(v))) > 78:
-                mark = 3.9
-            elif int(float('.'.join(v))) > 76:
-                mark = 3.8
-            elif int(float('.'.join(v))) > 74:
-                mark = 3.7
-            elif int(float('.'.join(v))) > 72:
-                mark = 3.6
-            else:
-                mark = 'press F'
-            text += '{0}\n {1}\n {2}   {3}\n\n'.format(k[0][:-7], " ".join(pos), int(float('.'.join(v))), mark)
-        total += float('.'.join(v))
-        count += 1
-    await message.answer(text)
-    await message.answer("Средний балл за семестр: " + str(round(total / count, 2)))
+
+    await message.answer(await get_trans_text(message.from_user.id))
+    await check_trans()
+
 
 
 

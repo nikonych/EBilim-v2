@@ -123,6 +123,77 @@ def get_transkript2(id):
         return info
 
 
+def get_transkript_only_num(id):
+    user = get_userx(user_id=id)
+
+    payload = {
+        'Login': user['inai_login'],
+        'Password': user['inai_password'],
+        'LangID': '1049'
+    }
+    with requests.session() as s:
+        main = s.post(url, data=payload)
+        soup = BeautifulSoup(main.content, 'html.parser')
+        # print(soup.find_all('a', href=True, target="_blank"))
+        r = s.get(main_url[:-1] + find_by_text(soup, "3",'a', href=True, target="_blank")['href'])
+        soup = BeautifulSoup(r.content, 'html.parser')
+        info = {}
+        for span in soup.findAll('tr'):
+            text = []
+            for a in span.findAll('a'):
+                text.append(a.text)
+                # print(a.text)
+            if tuple(text) not in info.keys():
+                if(span.find('span') is None):
+                    info[tuple(text)] = '0,0'
+                else:
+                    info[tuple(text)] = span.find('span').text
+            # print(span.find('span').text)
+            # print(soup.find_all("span"))
+        # print(info)
+        # for a in soup.find_all('dd'):
+        #     print(a.text)
+        # print(soup.findAll('h2')[1].text)
+        gg = []
+        for k, v in info.items():
+            gg.append(float(v.replace(",", ".")))
+
+        return gg
+
+
+def get_transkript_only_sub_names(id):
+    user = get_userx(user_id=id)
+
+    payload = {
+        'Login': user['inai_login'],
+        'Password': user['inai_password'],
+        'LangID': '1049'
+    }
+    with requests.session() as s:
+        main = s.post(url, data=payload)
+        soup = BeautifulSoup(main.content, 'html.parser')
+        # print(soup.find_all('a', href=True, target="_blank"))
+        r = s.get(main_url[:-1] + find_by_text(soup, "3",'a', href=True, target="_blank")['href'])
+        soup = BeautifulSoup(r.content, 'html.parser')
+        info = []
+        for span in soup.findAll('tr'):
+            text = []
+            for a in span.findAll('a'):
+                text.append(a.text)
+                # print(a.text)
+            if text[0][:-7] not in info:
+                info.append(text[0][:-7])
+            # print(span.find('span').text)
+            # print(soup.find_all("span"))
+        # print(info)
+        # for a in soup.find_all('dd'):
+        #     print(a.text)
+        # print(soup.findAll('h2')[1].text)
+
+
+        return info
+
+
 def get_subjects(id):
     user = get_userx(user_id=id)
 

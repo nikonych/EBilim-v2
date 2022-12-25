@@ -15,15 +15,17 @@ from services.api_session import RequestsSession
 from middlewares import setup_middlewares
 from services.dbhandler import create_dbx
 from utils.misc.bot_commands import set_commands
+from utils.misc_functions import update_logs_month, check_trans
 
 # from utils.misc_functions import update_logs_day, update_logs_week, update_logs_month
 
 colorama.init()
 
 
+
 # Запуск шедулеров
-# async def scheduler_start():
-#     scheduler.add_job(update_logs_week, "cron", day_of_week="fri", hour=00)
+async def scheduler_start():
+    scheduler.add_job(update_logs_month, 'cron', second='0')
 #     scheduler.add_job(update_logs_day, "cron", hour=00)
 #     scheduler.add_job(update_logs_month, "cron", day=9, hour=00)
 
@@ -62,3 +64,5 @@ if __name__ == "__main__":
     setup_middlewares(dp)
 
     executor.start_polling(dp, on_startup=on_startup, on_shutdown=on_shutdown)
+
+

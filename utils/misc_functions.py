@@ -6,7 +6,9 @@ import requests
 from aiogram import Dispatcher
 from bs4 import BeautifulSoup
 
-
+from loader import bot
+from services.dbhandler import get_all_trans
+from services.parser import get_transkript2, get_transkript_only_num, get_transkript_only_sub_names
 
 
 # Рассылка сообщения всем администраторам
@@ -30,6 +32,34 @@ from bs4 import BeautifulSoup
 # async def update_logs_week():
 #     update_logs(weeklogs=0, weekcolds=0)
 #
-# async def update_logs_month():
-#     update_logs(monthlogs=0, monthcolds=0)
+
+
+async def check_trans():
+    all_trans = get_all_trans()
+    for user in all_trans:
+        info = get_transkript_only_num(user['user_id'])
+        print(info)
+        flag = False
+        c = -1
+        print(user)
+        for k, v in user.items():
+            flag = False
+            if c == -1:
+                c += 1
+                continue
+            if float(v) != info[c]:
+                flag = True
+            if flag:
+                sub_names = get_transkript_only_sub_names(user['user_id'])
+                print(sub_names)
+                print(k, info[c])
+                # await bot.send_message(user['user_id'], f"Поставили оценку!\n"
+                #                                   f"{sub_names[c-1]} - {info[c]}")
+            c += 1
+
+
+
+
+async def update_logs_month():
+    check_trans()
 
