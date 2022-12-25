@@ -37,3 +37,29 @@ async def return_subjects_inl():
     )
 
     return keyboard
+
+async def be_postavki():
+    keyboard = InlineKeyboardMarkup()
+    keyboard.add(InlineKeyboardButton("Инструкция как загружать свой товар!", callback_data="instrusction_postavki"),
+
+        ).add(InlineKeyboardButton("Закрыть", callback_data="return_darknet"))
+
+    return keyboard
+
+
+async def return_postavki_inl():
+    keyboard = InlineKeyboardMarkup()
+    keyboard.add(
+        InlineKeyboardButton("Назад", callback_data="return_postavki")
+    )
+
+    return keyboard
+
+
+async def set_payment_inl():
+    keyboard = InlineKeyboardMarkup()
+    keyboard.add(
+        InlineKeyboardButton("Добавить реквизиты", callback_data="set_payment")
+    )
+
+    return keyboard

@@ -15,7 +15,7 @@ def menu_frep(user_id):
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
     keyboard.row("👤 Профиль", "📥 Транскрипт")
     keyboard.row("📁 Предметы", "📕 Расписание")
-    keyboard.row("😈 Нажми если лень")
+    keyboard.row("😈 Темные делишки")
 
     if user_id in get_admins():
         keyboard.row("⚙ Админ панель")
@@ -28,3 +28,12 @@ def menu_frep(user_id):
     return keyboard
 
 
+def darknet(user_id):
+    keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+    keyboard.row("Тесты", "Лабораторные")
+    keyboard.row("Экзамены", "Домашки")
+    keyboard.row("Инструкция")
+    keyboard.row("Назад")
+
+
+    return keyboard

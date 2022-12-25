@@ -10,7 +10,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.types import Message
 
 from keyboards.inline_admin import accept_user_inl
-from keyboards.reply_z_all import menu_frep
+from keyboards.reply_z_all import menu_frep, darknet
 from keyboards.inline_user import *
 from loader import dp, bot
 import services.dbhandler as db
@@ -70,7 +70,6 @@ async def user_profile(message: Message, state: FSMContext):
     await state.finish()
     info = get_transkript2(message.from_user.id)
     # db.addTranskript(message.from_user.id, info)
-    print(info)
     total = 0
     count = 0
     text = ''
@@ -154,10 +153,77 @@ async def user_profile(message: Message, state: FSMContext):
 
 
 
+@dp.message_handler(text="😈 Темные делишки", state="*")
+async def user_profile(message: Message, state: FSMContext):
+    await message.answer("Ты перешел на темную сторону универа! Не доверяй никому!", reply_markup=darknet(message.from_user.id))
 
 
 
-# Информация
+@dp.message_handler(text="Назад", state="*")
+async def user_profile(message: Message, state: FSMContext):
+    await message.answer(f"Рад увидеть твою рожу снова!",
+                         reply_markup=menu_frep(message.from_user.id))
+
+
+@dp.message_handler(text="Инструкция", state="*")
+async def user_profile(message: Message, state: FSMContext):
+    await message.answer("Короче, Меченый, я тебя спас и в благородство играть не буду:"
+                         " выполнишь для меня пару заданий – и мы в расчете.\n\n"
+                         ""
+                         "1) Выбираешь товар, который тебе нужен\n"
+                         "2) Выбираешь свой курс обучения\n"
+                         "3) Выбираешь предмет\n"
+                         "4) Если есть товар, который тебе нужен, то тебе повезло!\n"
+                         "5) Пиши @dast4nkg о том, что хочешь приобрести товар\n"
+                         "6) После оплаты и согласия @dast4nkg, тебе будет доступен товар!\n"
+                         "7) За дополнительную плату мы дадим контакты поставщика (тот кто загрузил товар)\n"
+                         "8) Если докажешь что товар не соответствует (хуевый), вернем деньги (только те которые сами взяли как комиссию, от поставщика забирай деньги сам!)\n", reply_markup=await be_postavki())
+
+
+
+@dp.callback_query_handler(text_startswith="instrusction_postavki", state="*")
+async def insert_login(message: Union['Message', 'CallbackQuery'], state: FSMContext):
+    await message.message.edit_text("Инструкция как загружать свой товар!\n"
+                            "\n"
+                            "1) Надо оплатить \"одноразовый платеж\" через @dast4nkg, и у вас откроется доступ\n"
+                            "2) Теперь в разделах с товарами после выбора курса и группы появится кнопка \"Загрузить\"\n"
+                            "3) Пишешь название товара (коротко но чтобы поняли! пример: Матем 13 лаба)\n"
+                            "4) Указываешь цену (не слишком высокую! до 300 сом)\n\n"
+                            "Важно!!!\n"
+                            "5) Все товары загружать сначала в свой <b>гугл док</b>(Фотки вставлять прямо на страницы) или <b>гугл диск</b>(если какой-то файл)!!! \n"
+                            "6) После сюда скидывать ссылку с доступом!!!\n"
+                            "\n"
+                            "А теперь о самом интересном!\n"
+                            "7) Не забудьте указать хоть какие-то реквизиты в профиле!\n"
+                            "8) Ваша доля будет 80% от стоимости товара, 20% на печеньки админу)\n"
+                            "9) Средства будут зачислены в течении трех дней после покупки пользователем!\n"
+                            "\n"
+                            "При каких либо вопросах - @dast4nkg\n"
+                            , reply_markup=await return_postavki_inl())
+
+
+
+@dp.callback_query_handler(text_startswith="return_postavki", state="*")
+async def insert_login(message: Union['Message', 'CallbackQuery'], state: FSMContext):
+    await message.message.edit_text("Короче, Меченый, я тебя спас и в благородство играть не буду:"
+                         " выполнишь для меня пару заданий – и мы в расчете.\n\n"
+                         ""
+                         "1) Выбираешь товар, который тебе нужен\n"
+                         "2) Выбираешь свой курс обучения\n"
+                         "3) Выбираешь предмет\n"
+                         "4) Если есть товар, который тебе нужен, то тебе повезло!\n"
+                         "5) Пиши @dast4nkg о том, что хочешь приобрести товар\n"
+                         "6) После оплаты и согласия @dast4nkg, тебе будет доступен товар!\n"
+                         "7) За дополнительную плату мы дадим контакты поставщика (тот кто загрузил товар)\n"
+                         "8) Если докажешь что товар не соответствует (хуевый), вернем деньги (только те которые сами взяли как комиссию, от поставщика забирай деньги сам!)\n", reply_markup=await be_postavki())
+
+
+@dp.callback_query_handler(text_startswith="return_darknet", state="*")
+async def insert_login(message: Union['Message', 'CallbackQuery'], state: FSMContext):
+    await message.message.delete()
+
+
+
 @dp.message_handler(text="📕 Расписание", state="*")
 async def info_handler(message: Message, state: FSMContext):
     sch = get_shedule(message.from_user.id)
@@ -180,7 +246,11 @@ async def info_handler(message: Message, state: FSMContext):
 
 @dp.message_handler(text="👤 Профиль", state="*")
 async def info_handler(message: Message, state: FSMContext):
-     await message.answer(await get_profile_text(message.from_user.id))
+    user = get_userx(user_id=message.from_user.id)
+    if user['payment'] is None:
+        await message.answer(await get_profile_text(message.from_user.id), reply_markup=await set_payment_inl())
+    else:
+        await message.answer(await get_profile_text(message.from_user.id))
 
 
 @dp.callback_query_handler(text_startswith="return_subjects", state="*")

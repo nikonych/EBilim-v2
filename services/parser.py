@@ -15,7 +15,7 @@ from services.dbhandler import get_userx, get_settings
 
 url = ('https://lms.inai.kg/Account/Login')
 s_url = ('https://lms.inai.kg/')
-transkript2 = ('https://lms.inai.kg/studentjurnal/semester?idSem=3&idGroup=17')
+main_url = 'https://lms.inai.kg/'
 subjects = ('https://lms.inai.kg/studentjurnal/discipline')
 schedule = ('https://lms.inai.kg/Scheduleteacher/group')
 payment = ('https://lms.inai.kg/payment/addpayment')
@@ -36,6 +36,44 @@ payment = ('https://lms.inai.kg/payment/addpayment')
 #     print(soup.findAll('h2')[1].text)
 #     # print(soup)
 
+import re
+
+MATCH_ALL = r'.*'
+
+
+def like(string):
+    """
+    Return a compiled regular expression that matches the given
+    string with any prefix and postfix, e.g. if string = "hello",
+    the returned regex matches r".*hello.*"
+    """
+    string_ = string
+    if not isinstance(string_, str):
+        string_ = str(string_)
+    regex = MATCH_ALL + re.escape(string_) + MATCH_ALL
+    return re.compile(regex, flags=re.DOTALL)
+
+def find_by_text(soup, text, tag, **kwargs):
+    """
+    Find the tag in soup that matches all provided kwargs, and contains the
+    text.
+
+    If no match is found, return None.
+    If more than one match is found, raise ValueError.
+    """
+    elements = soup.find_all(tag, **kwargs)
+    matches = []
+    for element in elements:
+        if element.find(text=like(text)):
+            matches.append(element)
+    if len(matches) > 1:
+        raise ValueError("Too many matches:\n" + "\n".join(matches))
+    elif len(matches) == 0:
+        return None
+    else:
+        return matches[0]
+
+
 def check_ebilim(login, password):
     payload = {
         'Login': login,
@@ -49,7 +87,6 @@ def check_ebilim(login, password):
         if(soup.find('button').text == "Войти в систему "):
             return False
         else:
-
             return True
 
 def get_transkript2(id):
@@ -61,8 +98,10 @@ def get_transkript2(id):
         'LangID': '1049'
     }
     with requests.session() as s:
-        s.post(url, data=payload)
-        r = s.get(transkript2)
+        main = s.post(url, data=payload)
+        soup = BeautifulSoup(main.content, 'html.parser')
+        # print(soup.find_all('a', href=True, target="_blank"))
+        r = s.get(main_url[:-1] + find_by_text(soup, "3",'a', href=True, target="_blank")['href'])
         soup = BeautifulSoup(r.content, 'html.parser')
         info = {}
         for span in soup.findAll('tr'):

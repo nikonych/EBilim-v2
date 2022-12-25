@@ -88,12 +88,13 @@ def get_settings(**kwargs):
         return con.execute(sql).fetchone()
 
 # Получение пользователя
-def get_userx(**kwargs):
+def get_userx(user_id, **kwargs):
     with sqlite3.connect(DATABASE_PATH) as con:
         con.row_factory = dict_factory
         sql = "SELECT * FROM users"
-        sql, parameters = update_format_args(sql, kwargs)
-        return con.execute(sql, parameters).fetchone()
+        sql, parameters = update_format(sql, kwargs)
+        parameters.append(user_id)
+        return con.execute(sql + "WHERE user_id = ?", parameters).fetchone()
 
 
 def isBan(user_id):
@@ -147,7 +148,7 @@ def create_dbx():
         con.row_factory = dict_factory
 
         # Создание БД с хранением данных пользователей
-        if len(con.execute("PRAGMA table_info(users)").fetchall()) == 7:
+        if len(con.execute("PRAGMA table_info(users)").fetchall()) == 8:
             print("All db was found")
         else:
                 con.execute("CREATE TABLE users("
@@ -157,7 +158,8 @@ def create_dbx():
                             "inai_login text,"
                             "inai_password text,"
                             "status text,"
-                            "is_banned boolean default FALSE)")
+                            "is_banned boolean default FALSE,"
+                            "payment text)")
                 print("DB was not found(1) | Creating...")
 
             # Создание БД с хранением данных настроек

@@ -12,15 +12,6 @@ PATH_LOGS = 'data/logs.log'  # Путь к Логам
 
 
 
-info_text = "<b>📊  Статистика команды:\n" \
-            "\n" \
-            " └ 💼 Всего логов: {total_logs} (🧊 - {total_colds})\n" \
-            " └ 💼 Логов за сегодня: {day_logs} (🧊 - {day_colds})\n" \
-            " └ 💼 Логов за неделю: {week_logs} (🧊 - {week_colds})\n" \
-            " └ 💼 Логов за месяц: {month_logs} (🧊 - {month_colds})\n" \
-            "\n" \
-            "🔥 Воркеров в тиме: {total_users}</b>"
-
 async def updatelink(name, link):
     edit = configparser.ConfigParser()
     edit.read("settings.ini")
