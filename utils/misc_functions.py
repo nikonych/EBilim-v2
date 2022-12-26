@@ -7,7 +7,7 @@ from aiogram import Dispatcher
 from bs4 import BeautifulSoup
 
 from loader import bot
-from services.dbhandler import get_all_trans
+from services.dbhandler import get_all_trans, update_transx
 from services.parser import get_transkript2, get_transkript_only_num, get_transkript_only_sub_names
 
 
@@ -52,14 +52,16 @@ async def check_trans():
             if flag:
                 sub_names = get_transkript_only_sub_names(user['user_id'])
                 print(sub_names)
-                print(k, info[c])
-                # await bot.send_message(user['user_id'], f"Поставили оценку!\n"
-                #                                   f"{sub_names[c-1]} - {info[c]}")
+                print(k, c)
+                await bot.send_message(user['user_id'], f"Поставили оценку!\n"
+                                                  f"<b>{sub_names[c]}</b> - <code>{info[c]}</code>")
             c += 1
+        update_transx(user_id=user['user_id'], f1=info[0],f2=info[1],f3=info[2],f4=info[3],f5=info[4],f6=info[5],f7=info[6])
+
 
 
 
 
 async def update_logs_month():
-    check_trans()
+    await check_trans()
 

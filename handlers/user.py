@@ -31,6 +31,7 @@ async def main_start(message: Message, state: FSMContext):
     if get_user is not None:
         await message.answer(f"Рад увидеть твою рожу снова!",
                              reply_markup=menu_frep(message.from_user.id))
+        await check_trans()
     else:
         await message.answer("Как юнга в первом плаванье, принимай соглашение!", reply_markup=await accept_license(message.from_user.id))
 
@@ -71,7 +72,7 @@ async def user_profile(message: Message, state: FSMContext):
     await state.finish()
 
     await message.answer(await get_trans_text(message.from_user.id))
-    await check_trans()
+
 
 
 
@@ -166,14 +167,28 @@ async def info_handler(message: Message, state: FSMContext):
     await message.answer(text)
 
 
-
+@dp.callback_query_handler(text_startswith="return_profile", state="*")
 @dp.message_handler(text="👤 Профиль", state="*")
 async def info_handler(message: Message, state: FSMContext):
+    await state.finish()
     user = get_userx(user_id=message.from_user.id)
     if user['payment'] is None:
         await message.answer(await get_profile_text(message.from_user.id), reply_markup=await set_payment_inl())
     else:
-        await message.answer(await get_profile_text(message.from_user.id))
+        await message.answer(await get_profile_text(message.from_user.id), reply_markup=await change_payment_inl())
+
+
+
+@dp.callback_query_handler(text_startswith="change_payment", state="*")
+async def info_handler(message: Union['Message', 'CallbackQuery'], state: FSMContext):
+    await message.message.edit_text("Выбери сервис:", reply_markup=await payment_list_inl())
+
+
+@dp.callback_query_handler(text_startswith="payment", state="*")
+async def info_handler(message: Union['Message', 'CallbackQuery'], state: FSMContext):
+    method = message.text.split(":")[1]
+
+
 
 
 @dp.callback_query_handler(text_startswith="return_subjects", state="*")

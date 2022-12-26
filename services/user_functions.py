@@ -42,7 +42,7 @@ async def get_trans_text(user_id):
         c += 1
 
     text += "Средний балл за семестр: <code>" + str(round(total / count, 2)) + "</code>"
-    # update_transx(user_id=user_id, f1=gg['1'],f2=gg['2'],f3=gg['3'],f4=gg['4'],f5=gg['5'],f6=gg['6'],f7=gg['7'])
+    update_transx(user_id=user_id, f1=gg['1'],f2=gg['2'],f3=gg['3'],f4=gg['4'],f5=gg['5'],f6=gg['6'],f7=gg['7'])
 
 
 

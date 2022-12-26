@@ -63,3 +63,27 @@ async def set_payment_inl():
     )
 
     return keyboard
+
+async def change_payment_inl():
+    keyboard = InlineKeyboardMarkup()
+    keyboard.add(
+        InlineKeyboardButton("Изменить реквизиты", callback_data="change_payment")
+    )
+
+    return keyboard
+
+async def payment_list_inl():
+    keyboard = InlineKeyboardMarkup()
+    keyboard.add(
+        InlineKeyboardButton("Optima", callback_data="payment:optima")
+    ).add(
+        InlineKeyboardButton("Mbank", callback_data="payment:mbank")
+    ).add(
+        InlineKeyboardButton("Balance", callback_data="payment:balance")
+    ).add(
+        InlineKeyboardButton("Телефон", callback_data="payment:phone")
+    ).add(
+        InlineKeyboardButton("Назад", callback_data="return_profile")
+    )
+
+    return keyboard

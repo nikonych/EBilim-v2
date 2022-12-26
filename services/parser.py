@@ -181,7 +181,7 @@ def get_transkript_only_sub_names(id):
             for a in span.findAll('a'):
                 text.append(a.text)
                 # print(a.text)
-            if text[0][:-7] not in info:
+            if info.count(text[0][:-7]) < 2:
                 info.append(text[0][:-7])
             # print(span.find('span').text)
             # print(soup.find_all("span"))

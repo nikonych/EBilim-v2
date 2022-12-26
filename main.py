@@ -35,7 +35,7 @@ async def on_startup(dp: Dispatcher):
     await dp.bot.get_updates(offset=-1)
     dp.bot['rSession'] = RequestsSession()
 
-    # await scheduler_start()
+    await scheduler_start()
     await set_commands(dp)
 
     bot_logger.exception("BOT WAS STARTED")
